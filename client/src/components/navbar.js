@@ -4,22 +4,22 @@ import { useState, useEffect } from "react";
 
 const NavBar = (props) => {
 
-    const [logged, setLogged] = useState(true)
+    const [logged, setLogged] = useState(window.sessionStorage.getItem('user'))
 
-    useEffect(() => {
+    const [user, setUser] = useState(props.user)
 
-        if(sessionStorage.getItem("logged") === true){
-            setLogged(true);
-        }
-        else{
-            setLogged(false);
-        }
+    const logout = () => {
+        window.sessionStorage.removeItem('user')
+        window.sessionStorage.setItem('logged', false)
+        window.location.replace('/signin')
+        window.localStorage.removeItem('sessionId')
+        window.localStorage.removeItem('userId')
+    }
 
-    }, [])
-
+    
 
     return ( 
-        <nav className="NavBar fixed border-b-2 border-black bg-gray-700 w-full shadow-lg shadow-gray-500/100 h-auto">
+        <nav className="NavBar fixed border-b-2 z-10 border-black bg-gray-700 w-full shadow-lg shadow-gray-500/100 h-auto">
             <div className="container mx-auto flex justify-center items-center p-4">
                 <div className='logo w-1/3 text-2xl'>Bank</div>  
                 <div className="flex justify-center items-center w-3/4 lg:w-1/3">
@@ -39,12 +39,17 @@ const NavBar = (props) => {
                                 <p className="text-white duration-500 delay-150 text-center text-lg z-20 ">Loans</p>
                             </Link>
                         </li>
+                        <li className="group w-full h-full flex items-center lg:mx-0 mx-1 justify-center">
+                            <Link to={'/account/' + props.user.id + '/' + props.sessionId + '/dashboard'} className="group w-full lg:w-2/3 h-full relative flex justify-center align-center px-2 py-1 transition-all before:ease-out before:rounded-full before:absolute before:top-0 before:w-0 before:h-1 hover:before:w-full before:left-1/5 before:bg-green-900 before:duration-300 before:border-2 before:border-white before:invisible hover:before:visible after:border-2 after:border-white after:rounded after:absolute after:top-0 after:invisible hover:after:visible after:h-1 after:w-full after:duration-500 after:delay-200 hover:after:h-full before:left-1/5 after:bg-green-900">
+                                <p className="text-white duration-500 delay-150 text-center text-lg z-20 ">Account</p>
+                            </Link>
+                        </li>
                     </ul>
                 </div>
                 <div className='w-1/3'>
                     <Link to='/signin'>
                         {!logged && <button className="w-24 h-10 -skew-y-4 -skew-x-6 hover:skew-y-4 hover:skew-x-6 rounded-md text-white hover:text-gray-300 bg-green-700 transition duration-100 ease-in-out border-2 hover:border-green-700 hover:bg-transparent" to='/signin'>Sign In</button>}
-                        {logged && <button className="w-24 h-10 skew-y-4 skew-x-6 hover:-skew-y-6 hover:-skew-x-12 rounded-md text-white hover:text-grays-300 bg-red-900 transition duration-100 ease-in-out border-2 hover:border-red-900 hover:bg-transparent" to='/signin'>Logout</button>}
+                        {logged && <button onClick={() => {logout()}} className="w-24 h-10 skew-y-4 skew-x-6 hover:-skew-y-6 hover:-skew-x-12 rounded-md text-white hover:text-grays-300 bg-red-900 transition duration-100 ease-in-out border-2 hover:border-red-900 hover:bg-transparent" to='/signin'>Logout</button>}
                     </Link>
                 </div>
             </div>
